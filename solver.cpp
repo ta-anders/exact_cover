@@ -1,12 +1,8 @@
-//
-// Created by tom on 20/03/18.
-//
-
 #include <iostream>
-#include "vector"
 #include "solver.h"
 
-void ExactCoverSolver::search(int k) {
+void ExactCoverSolver::search(int k)
+{
   NodeId root = dlx_matrix_.get_root();
 
   if (dlx_matrix_.R(root) == root) {
@@ -40,7 +36,8 @@ void ExactCoverSolver::search(int k) {
   dlx_matrix_.uncover(col);
 }
 
-void ExactCoverSolver::print_solution() {
+void ExactCoverSolver::print_solution()
+{
   std::vector< std::vector<NodeId> >::iterator row;
   std::vector<NodeId >::iterator col;
 
@@ -51,4 +48,20 @@ void ExactCoverSolver::print_solution() {
 
     std::cout << "\n";
   }
+}
+
+void solve_exact_cover_problem(const InputMatrix &input_matrix)
+{
+  std::cout << "Starting solver..." << std::endl;
+
+  clock_t start = clock();
+
+  ExactCoverSolver solver(input_matrix);
+  solver.search(0);
+
+  clock_t end = clock();
+  double time_spent = (double)(end - start) / CLOCKS_PER_SEC;
+  std::printf("Finished solving in %f seconds, printing solution\n", time_spent);
+
+  solver.print_solution();
 }

@@ -1,39 +1,8 @@
-//
-// Created by tom on 18/03/18.
-//
-
-#ifndef SODOKU_DATA_H
-#define SODOKU_DATA_H
-
+#pragma once
 #include <vector>
-#include <array>
 
 typedef unsigned int NodeId;
-
-// Little data container to encapsulate a 2D 0-1 matrix.
-// Stores all values in a flat chunk, where each row is essentially shifted down by the number of columns.
-// I.e the second row starts at index num_columns, the third at 2 * num_columns and so on.
-class InputMatrix
-{
- private:
-  int num_rows_;
-  int num_cols_;
-  bool *data_;
-
- public:
-  InputMatrix(int num_rows, int num_cols, bool *data);
-
-  ~InputMatrix() { delete[] data_; };
-
-  bool lookup(int row, int col) const;
-
-  void set(int row, int col, bool val);
-  void set_row(bool *row_vals, int row);
-  void display();
-
-  int get_num_rows() const { return num_rows_; }
-  int get_num_cols() const { return num_cols_; }
-};
+typedef std::vector< std::vector<bool> > InputMatrix;
 
 struct Node {
  public:
@@ -49,22 +18,13 @@ struct Node {
   Node(NodeId id_, int row_ind_, int col_ind_)
     : col_ind(col_ind_), row_ind(row_ind_), id(id_),
       left(id_), right(id_), up(id_), down(id_)
-  {
-  }
+  {}
 };
 
 class DLXMatrix
 {
- private:
-  std::vector<unsigned int> column_sizes_;
-  std::vector<Node> nodes_;
-  std::vector<NodeId> list_headers_;
-  NodeId id_count_ = 0;
-
-  NodeId create_new_node(int row_ind, int col_ind);
-
  public:
-  explicit DLXMatrix(const InputMatrix &input);
+  explicit DLXMatrix(const InputMatrix &input_matrix);
 
   int get_row(NodeId id) { return nodes_[id].row_ind; };
 
@@ -80,6 +40,11 @@ class DLXMatrix
   void cover(NodeId id);
   void uncover(NodeId id);
 
-};
+ private:
+  std::vector<unsigned int> column_sizes_;
+  std::vector<Node> nodes_;
+  std::vector<NodeId> list_headers_;
+  NodeId id_count_ = 0;
 
-#endif
+  NodeId create_new_node(int row_ind, int col_ind);
+};

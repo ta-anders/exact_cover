@@ -1,57 +1,15 @@
-//
-// Created by tom on 18/03/18.
-//
-
 #include <ctime>
 #include <iostream>
 #include "data.h"
 
-// Input matrix
-
 // Constructor
-InputMatrix::InputMatrix(int num_rows, int num_cols, bool *data)
-  : num_rows_(num_rows), num_cols_(num_cols), data_(data)
-{
-}
-
-// Lookup data by (row, col)
-bool InputMatrix::lookup(int row, int col) const {
-  return data_[row * num_cols_ + col];
-}
-
-// Set data by (row, col)
-void InputMatrix::set(int row, int col, bool val) {
-  data_[row * num_cols_ + col] = val;
-}
-
-// Set data by entire row
-void InputMatrix::set_row(bool *row_vals, int row) {
-  for (int i = 0; i < num_cols_; i++) {
-    set(row, i, row_vals[i]);
-  }
-}
-
-// Print a standard representation of the matrix out to console
-void InputMatrix::display()
-{
-  for (int i = 0; i < get_num_rows(); i++) {
-    for (int j = 0; j < get_num_cols(); j++) {
-      std::cout << lookup(i, j);
-    }
-    std::cout << "\n";
-  }
-}
-
-// DLX matrix
-
-// Constructor
-DLXMatrix::DLXMatrix(const InputMatrix &input)
+DLXMatrix::DLXMatrix(const InputMatrix &input_matrix)
 {
   clock_t start = clock();
   NodeId root_id = create_new_node(-1, -1);
 
-  int num_cols = input.get_num_cols();
-  int num_rows = input.get_num_rows();
+  auto num_cols = input_matrix[0].size();
+  auto num_rows = input_matrix.size();
 
   list_headers_.reserve(num_cols);
   column_sizes_.reserve(num_cols);
@@ -71,7 +29,7 @@ DLXMatrix::DLXMatrix(const InputMatrix &input)
     NodeId first_non_zero = 0;
     for (int j = 0; j < num_cols; j++) {
       NodeId list_header = list_headers_[j];
-      if (input.lookup(i, j)) {
+      if (input_matrix[i][j]) {
         NodeId n = create_new_node(i, j);
         nodes_[n].down = list_header;
         nodes_[n].up = U(list_header);
@@ -104,7 +62,8 @@ DLXMatrix::DLXMatrix(const InputMatrix &input)
 }
 
 // Node creation
-NodeId DLXMatrix::create_new_node(int row_ind, int col_ind) {
+NodeId DLXMatrix::create_new_node(int row_ind, int col_ind)
+{
   Node new_node(id_count_, row_ind, col_ind);
   nodes_.push_back(new_node);
   id_count_++;
@@ -113,8 +72,8 @@ NodeId DLXMatrix::create_new_node(int row_ind, int col_ind) {
 }
 
 // Column operations. Pretty much direct copies from Knuth's paper.
-void DLXMatrix::cover(NodeId id) {
-
+void DLXMatrix::cover(NodeId id)
+{
   NodeId col_node = C(id);
 
   // Remove link for this column header to its neighbours
@@ -132,7 +91,8 @@ void DLXMatrix::cover(NodeId id) {
   }
 }
 
-void DLXMatrix::uncover(NodeId id) {
+void DLXMatrix::uncover(NodeId id)
+{
   NodeId col_node = C(id);
 
   for (NodeId r = U(col_node); r != col_node; r = U(r)) {
@@ -150,7 +110,8 @@ void DLXMatrix::uncover(NodeId id) {
   nodes_[R(col_node)].left = col_node;
 }
 
-NodeId DLXMatrix::choose_column() {
+NodeId DLXMatrix::choose_column()
+{
   NodeId root = get_root();
 
   NodeId best = R(root);
@@ -161,5 +122,4 @@ NodeId DLXMatrix::choose_column() {
   }
 
   return best;
-
 }
