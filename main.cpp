@@ -3,7 +3,7 @@
 
 int main()
 {
-  const InputMatrix input_matrix = {
+  const ExactCoverInputMatrix input_matrix = {
       {false, false, true, false, true, true, false},
       {true, false, false, true, false, false, true},
       {false, true, true, false, false, true, false},
@@ -12,9 +12,9 @@ int main()
       {false, false, false, true, true, false, true}
   };
 
-  solve_exact_cover_problem(input_matrix);
+  SolveExactCoverProblem(input_matrix);
 
-  const InputMatrix input_matrix_2 = {
+  const ExactCoverInputMatrix input_matrix_2 = {
       {true, false, false, true, false, false, true},
       {true, false, false, true, false, false, false},
       {false, false, false, true, true, false, true},
@@ -24,8 +24,7 @@ int main()
       {true, false, false, true, false, false, false}
   };
 
-  solve_exact_cover_problem(input_matrix_2);
-
+  SolveExactCoverProblem(input_matrix_2);
 
   return 0;
 }

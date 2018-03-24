@@ -1,48 +1,54 @@
 #include <iostream>
 #include "solver.h"
 
-void ExactCoverSolver::search(int k)
+void ExactCoverSolver::Search(int k)
 {
   NodeId root = dlx_matrix_.get_root();
 
-  if (dlx_matrix_.R(root) == root) {
+  if (dlx_matrix_.R(root) == root)
+  {
     solutions_.push_back(solution_stack_);
-    return ;
+    return;
   }
 
   // Choose column with least 1s
-  NodeId col = dlx_matrix_.choose_column();
+  NodeId col = dlx_matrix_.ChooseColumn();
 
   // Cover it
-  dlx_matrix_.cover(col);
+  dlx_matrix_.Cover(col);
 
-  for (NodeId r = dlx_matrix_.D(col); r != col; r = dlx_matrix_.D(r)) {
+  for (NodeId r = dlx_matrix_.D(col); r != col; r = dlx_matrix_.D(r))
+  {
     solution_stack_.push_back(r);
 
-    for (NodeId rn = dlx_matrix_.R(r); rn != r; rn = dlx_matrix_.R(rn)) {
-      dlx_matrix_.cover(rn);
+    for (NodeId rn = dlx_matrix_.R(r); rn != r; rn = dlx_matrix_.R(rn))
+    {
+      dlx_matrix_.Cover(rn);
     }
 
-    search(k + 1);
+    Search(k + 1);
 
     solution_stack_.pop_back();
     col = dlx_matrix_.C(r);
 
-    for (NodeId ln = dlx_matrix_.L(r); ln != r; ln = dlx_matrix_.L(ln)) {
-      dlx_matrix_.uncover(ln);
+    for (NodeId ln = dlx_matrix_.L(r); ln != r; ln = dlx_matrix_.L(ln))
+    {
+      dlx_matrix_.Uncover(ln);
     }
   }
 
-  dlx_matrix_.uncover(col);
+  dlx_matrix_.Uncover(col);
 }
 
-void ExactCoverSolver::print_solution()
+void ExactCoverSolver::PrintSolution()
 {
-  std::vector< std::vector<NodeId> >::iterator row;
-  std::vector<NodeId >::iterator col;
+  std::vector<std::vector<NodeId> >::iterator row;
+  std::vector<NodeId>::iterator col;
 
-  for (row = solutions_.begin(); row != solutions_.end(); row++) {
-    for (col = row->begin(); col != row->end(); col++) {
+  for (row = solutions_.begin(); row != solutions_.end(); row++)
+  {
+    for (col = row->begin(); col != row->end(); col++)
+    {
       std::cout << dlx_matrix_.get_row(*col) << " ";
     }
 
@@ -50,18 +56,18 @@ void ExactCoverSolver::print_solution()
   }
 }
 
-void solve_exact_cover_problem(const InputMatrix &input_matrix)
+void SolveExactCoverProblem(const ExactCoverInputMatrix &input_matrix)
 {
   std::cout << "Starting solver..." << std::endl;
 
   clock_t start = clock();
 
   ExactCoverSolver solver(input_matrix);
-  solver.search(0);
+  solver.Search(0);
 
   clock_t end = clock();
-  double time_spent = (double)(end - start) / CLOCKS_PER_SEC;
-  std::printf("Finished solving in %f seconds, printing solution\n", time_spent);
+  double time_spent = (double) (end - start) / CLOCKS_PER_SEC;
+  std::cout << "Finished solving in " << time_spent << " seconds, printing solution\n";
 
-  solver.print_solution();
+  solver.PrintSolution();
 }
