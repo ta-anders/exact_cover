@@ -4,8 +4,8 @@
 class ExactCoverSolver
 {
  public:
-  explicit ExactCoverSolver(const ExactCoverInputMatrix &input_matrix)
-      : dlx_matrix_(input_matrix) {}
+  explicit ExactCoverSolver(const ExactCoverInputMatrix &input_matrix, int num_cols)
+      : dlx_matrix_(input_matrix, num_cols) {}
 
   void Search(int k);
   void PrintSolution();
@@ -18,4 +18,4 @@ class ExactCoverSolver
   std::vector<std::vector<NodeId> > solutions_;
 };
 
-void SolveExactCoverProblem(const ExactCoverInputMatrix &input_matrix);
+void SolveExactCoverProblem(const ExactCoverInputMatrix &input_matrix, int num_cols);

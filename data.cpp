@@ -3,12 +3,11 @@
 #include "data.h"
 
 // Constructor
-DLXMatrix::DLXMatrix(const ExactCoverInputMatrix &input_matrix)
+DLXMatrix::DLXMatrix(const ExactCoverInputMatrix &input_matrix, int num_cols)
 {
   clock_t start = clock();
   NodeId root_id = CreateNewNode(-1, -1);
 
-  auto num_cols = input_matrix[0].size();
   auto num_rows = input_matrix.size();
 
   list_headers_.reserve(num_cols);
@@ -29,30 +28,27 @@ DLXMatrix::DLXMatrix(const ExactCoverInputMatrix &input_matrix)
   for (int i = 0; i < num_rows; i++)
   {
     NodeId first_non_zero = 0;
-    for (int j = 0; j < num_cols; j++)
+    for (auto &j : input_matrix[i])
     {
       NodeId list_header = list_headers_[j];
-      if (input_matrix[i][j])
+      NodeId n = CreateNewNode(i, j);
+      nodes_[n].down = list_header;
+      nodes_[n].up = U(list_header);
+      nodes_[U(list_header)].down = n;
+      nodes_[list_header].up = n;
+
+      column_sizes_[j] += 1;
+
+      if (first_non_zero == 0)
       {
-        NodeId n = CreateNewNode(i, j);
-        nodes_[n].down = list_header;
-        nodes_[n].up = U(list_header);
-        nodes_[U(list_header)].down = n;
-        nodes_[list_header].up = n;
-
-        column_sizes_[j] += 1;
-
-        if (first_non_zero == 0)
-        {
-          first_non_zero = n;
-        }
-        else
-        {
-          nodes_[n].right = first_non_zero;
-          nodes_[n].left = L(first_non_zero);
-          nodes_[L(first_non_zero)].right = n;
-          nodes_[first_non_zero].left = n;
-        }
+        first_non_zero = n;
+      }
+      else
+      {
+        nodes_[n].right = first_non_zero;
+        nodes_[n].left = L(first_non_zero);
+        nodes_[L(first_non_zero)].right = n;
+        nodes_[first_non_zero].left = n;
       }
     }
   }

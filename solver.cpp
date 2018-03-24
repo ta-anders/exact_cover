@@ -56,13 +56,13 @@ void ExactCoverSolver::PrintSolution()
   }
 }
 
-void SolveExactCoverProblem(const ExactCoverInputMatrix &input_matrix)
+void SolveExactCoverProblem(const ExactCoverInputMatrix &input_matrix, int num_cols)
 {
   std::cout << "Starting solver..." << std::endl;
 
   clock_t start = clock();
 
-  ExactCoverSolver solver(input_matrix);
+  ExactCoverSolver solver(input_matrix, num_cols);
   solver.Search(0);
 
   clock_t end = clock();

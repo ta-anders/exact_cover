@@ -1,7 +1,5 @@
-#include <iostream>
 #include <fstream>
 #include "sudoku.h"
-#include "utils.cpp"
 
 
 void CreateRow(int x, int y, int value, ExactCoverInputMatrix *ec_input)

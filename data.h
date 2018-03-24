@@ -2,7 +2,7 @@
 #include <vector>
 
 typedef unsigned int NodeId;
-typedef std::vector<std::vector<bool> > ExactCoverInputMatrix;
+typedef std::vector<std::vector<unsigned int> > ExactCoverInputMatrix;
 
 struct Node
 {
@@ -24,7 +24,7 @@ struct Node
 class DLXMatrix
 {
  public:
-  explicit DLXMatrix(const ExactCoverInputMatrix &input_matrix);
+  explicit DLXMatrix(const ExactCoverInputMatrix &input_matrix, int num_cols);
 
   int get_row(NodeId id) { return nodes_[id].row_ind; };
 
