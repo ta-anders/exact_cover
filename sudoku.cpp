@@ -5,7 +5,11 @@
 
 // Constructor from file name
 SudokuInputCreator::SudokuInputCreator(const std::string &filename)
-    : input_data_()
+    : input_data_(),
+      cell_occupied_(9 * 9, 0),
+      row_occupied_(9 * 9, 0),
+      column_occupied_(9 * 9, 0),
+      grid_occupied_(9 * 9, 0)
 {
   std::ifstream infile(filename);
 
@@ -76,10 +80,6 @@ void SudokuInputCreator::CreateRow(int x, int y, int value, bool preset)
 void SudokuInputCreator::PopulateExactCoverInputMatrix()
 {
   clock_t start = clock();
-  cell_occupied_.reserve(9 * 9);
-  row_occupied_.reserve(9 * 9);
-  column_occupied_.reserve(9 * 9);
-  grid_occupied_.reserve(9 * 9);
 
   // Go through all the pre filled values to populate the occupied caches,
   // in order to cut down the number of possible assignments to blank cells.

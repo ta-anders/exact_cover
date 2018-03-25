@@ -14,7 +14,11 @@ class SudokuInputCreator
 {
  public:
   explicit SudokuInputCreator(const SudokuInputData &input_data)
-      : input_data_(input_data) {};
+      : input_data_(input_data),
+        cell_occupied_(9 * 9, 0),
+        row_occupied_(9 * 9, 0),
+        column_occupied_(9 * 9, 0),
+        grid_occupied_(9 * 9, 0) {};
 
   explicit SudokuInputCreator(const std::string &filename);
 
