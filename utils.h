@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <unordered_set>
 
 struct Coords
 {
@@ -18,4 +19,10 @@ Coords GetCoordsFromPosition(const int position)
   const int y = position % 9;
 
   return Coords {x, y};
+}
+
+template <typename T>
+bool SetContains(std::unordered_set<T> container, T item)
+{
+  return container.find(item) != container.end();
 }

@@ -13,7 +13,8 @@ int main()
       {3, 4, 6}
   };
 
-  SolveExactCoverProblem(input_matrix, num_cols);
+  ExactCoverSolver solver(input_matrix, num_cols);
+  solver.Solve();
 
   int num_cols_2 = 7;
   const ExactCoverInputMatrix input_matrix_2 = {
@@ -26,7 +27,8 @@ int main()
       {0, 3}
   };
 
-  SolveExactCoverProblem(input_matrix_2, num_cols_2);
+  ExactCoverSolver solver_2(input_matrix_2, num_cols_2);
+  solver_2.Solve();
 
   return 0;
 }
